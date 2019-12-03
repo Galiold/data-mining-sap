@@ -2,8 +2,9 @@
 library("ggpubr")
 library("dplyr")
 
+
 # data read
-data = read.csv('Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
+data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
 data
 
 # 1. Data Cleaning
@@ -39,4 +40,10 @@ data[which(data$Discussion %in% plotinfo$out), ] # output -> null
 data <- data[!duplicated(data),]
 
 # 2.2. Handling Correlation
-ggscatter()
+ggqqplot(data$AnnouncementsView, ylab = "dis")
+
+res <- cor.test(data$raisedhands, data$raisedhands, method = "pearson")
+res
+
+newData <- table(data$Class, data$StudentAbsenceDays)
+newData
