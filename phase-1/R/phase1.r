@@ -14,7 +14,8 @@ data
 
 plotinfo <- boxplot(data$raisedhands, data$VisITedResources, data$AnnouncementsView, data$Discussion,
 main = "Testing data for outliers",
-ylab = "Attributes (raisedhands,    VisITedResources,    AnnouncementsView,   Discussion)",
+names = c("raisedhands", "VisITedResources", "AnnouncementsView", "Discussion"),
+ylab = "Attributes",
 col = c("lightblue", "green", "darkred", "orange"),
 border = "brown",
 horizontal = TRUE,
