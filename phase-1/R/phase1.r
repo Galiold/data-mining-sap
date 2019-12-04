@@ -1,7 +1,12 @@
+#Title: Phase 1 Data Mining
+#Authors: Ali Goldani 9512762
+#         Mohammad Kahani 9512762447
+
 # Libraries
 library("ggpubr")
 library("dplyr")
-
+library("ltm")
+library("caret")
 
 # data read
 data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
@@ -40,10 +45,45 @@ data[which(data$Discussion %in% plotinfo$out), ] # output -> null
 data <- data[!duplicated(data),]
 
 # 2.2. Handling Correlation
-ggqqplot(data$AnnouncementsView, ylab = "dis")
+ggqqplot(data$AnnouncementsVie, ylab = "dis")
 
 res <- cor.test(data$raisedhands, data$raisedhands, method = "pearson")
 res
 
 newData <- table(data$Class, data$StudentAbsenceDays)
-newData
+newData2 <- table(data$Class, data$gender)
+newData3 <- table(data$Class, data$GradeID)
+newData3
+
+chisq.test(newData, correct=F)
+chisq.test(newData3, correct=F)
+
+#Data Reduction
+
+#Feature Selection
+
+selected <- data[,c('raisedhands','VisITedResources','AnnouncementsView', 'Discussion')]
+selected
+
+#pca variance order for numeric attributes
+data_pca <- prcomp(selected, scale.=T)
+data_pca
+plot(data_pca)
+
+# ensure the results are repeatable
+set.seed(7)
+# load the data
+data(data)
+help(data)
+# calculate correlation matrix
+correlationMatrix <- cor(data[10:13])
+# summarize the correlation matrix
+print(correlationMatrix)
+# find attributes that are highly corrected (ideally >0.75)
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
+# print indexes of highly correlated attributes
+print(highlyCorrelated)
+
+#TODO Data Reduction: dimensionality reduction
+#biserial.cor(data$raisedhands, data$NationalITy)
+#biserial.cor()
