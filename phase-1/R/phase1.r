@@ -106,7 +106,14 @@ print(highlyCorrelated)
 #biserial.cor(data$raisedhands, data$NationalITy)
 #biserial.cor()
 
+#TODO feature selection need to be enhanced
 
+#TODO feature generation
+
+#data transformation
+
+#TODO data discretization
+#TODO data aggregation
 
 #data normalization for numeric att
 normal_data <- data.Normalization (selected,type="n4",normalization="column")
