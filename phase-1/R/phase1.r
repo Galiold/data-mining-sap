@@ -7,6 +7,9 @@ library("ggpubr")
 library("dplyr")
 library("ltm")
 library("caret")
+library("FactoMineR") # for PCA function
+library("clusterSim")
+
 
 # data read
 data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
@@ -68,7 +71,22 @@ selected
 #pca variance order for numeric attributes
 data_pca <- prcomp(selected, scale.=T)
 data_pca
-plot(data_pca)
+summary(data_pca)
+#amount of variation for each pc
+pca.var <- data_pca$sdev^2
+#get the percentage of data variation for each pca
+pca.var.per <- round(pca.var/sum(pca.var)*100,1)
+#visualiztin the percentage of variation (can be used for answering questions)
+barplot(pca.var.per, main="Scree plot", xlab="PC", ylab="percentage of variation")
+#another visualization
+plot(data_pca$x[,1],data_pca$x[,2])
+
+
+#another pca function for more detailed output
+res.pca <- PCA(selected, graph = FALSE)
+#information needed for variation percentage can be better found here
+summary(res.pca)
+
 
 # ensure the results are repeatable
 set.seed(7)
@@ -87,3 +105,9 @@ print(highlyCorrelated)
 #TODO Data Reduction: dimensionality reduction
 #biserial.cor(data$raisedhands, data$NationalITy)
 #biserial.cor()
+
+
+
+#data normalization for numeric att
+normal_data <- data.Normalization (selected,type="n4",normalization="column")
+normal_data
