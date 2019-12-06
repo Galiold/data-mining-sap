@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{ragged2e}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{xcolor} % for setting colors
+\usepackage[justification=centering]{caption}
+\usepackage{graphicx,wrapfig}
+\usepackage{float}
+\usepackage{xepersian}
+% \settextfont{Yas}
+\settextfont[BoldFont={XB Yas Bd}, ItalicFont={XB Yas It}, BoldItalicFont={XB Yas BdIt}, Extension = .ttf]{XB Yas}
+\usepackage{setspace}
+\usepackage{listings}
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=false,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\doublespacing
+\makeatletter
+\let\footnoteruleA=\right@footnoterule
+\let\Afootnoterule=\right@footnoterule
+\makeatother
+\rightfootnoterule
+\begin{document}
+    \begin{center}
+        \huge\textbf{توضیحات فاز اول پروژه‌ی داده‌کاوی}
+	\end{center}
+
+    \begin{large}
+        \section{شرح کلیت دیتاست}
+            در این پروژه هدف ما تحلیل دیتاست SAP می‌باشد.
+            ما تمام تلاش خود را می‌کنیم تا بهترین سیستم را برای تحلیل این دیتاست به کار ببریم.
+
+\section{ قوانین و ساختار بازی}
+
+    \begin{itemize}
+        % \s etlength\itemsep{-0.5em}
+        \item در ابتدای بازی، بازیکن‌ها به ترتیب یک نیرو در منطقه‌ی دلخواه می‌گذارند تا مالکیت تمامی مناطق مشخص شود، سپس به تقسیم نیروها در مناطق خودشان ادامه می‌دهند تا تمامی نیروها در زمین پخش شوند.
+        \item در هر نوبت، بازیکن‌ها ۳ فاز حرکت دارند:
+        \begin{enumerate}
+            \item ابتدا بازیکن تعدادی نیروی جدید دریافت کرده و آن‌ها را در مناطقی که متعلق به خودش است پخش می‌کند. (تعداد بازیکن‌های دریافتی در هر نوبت بر اساس قوانین بازی و تعداد مناطق متعلق به بازیکن مشخص می‌شود. برای اطلاع پیدا کردن از این قوانین باید کد مربوط به این بخش را مطالعه کنید.)
+            \item سپس بازیکن می‌تواند به مناطق مجاور خود حمله کند، منطقه‌ی مجاور بخشی از زمین است که با مناطق متعلق به بازیکن، مرز مشترک داشته باشد. برای حمله، بازیکن تعدادی از نیروهای خود را به منطقه‌ی مجاور می‌برد و سپس براساس قوانین بازی با نیروی مقابل مبارزه می‌کند. (باید قوانین دقیق مبارزه و میزان تأثیر شانس در نحوه‌ی تعیین برنده را از روی کد به دست آورید.) توجه داشته باشید که برای مبارزه، هر بازیکن فقط می‌تواند به اندازه‌ای از نیروهای خود را جابه‌جا کند که حداقل یک نیرو در منطقه‌ی مبدأ باقی مانده باشد.
+            \item در انتها، بازیکن باید با توجه به نتیجه‌ی جنگ‌های خود، نیروهایش را در بخش‌های بازی که تصرف کرده‌است، پخش کند.
+        \end{enumerate}
+        \item پس از تمام شدن این مراحل، نوبت به بازیکن بعدی می‌رسد.
+        \item برنده‌ی نهایی بازی کسی است که تمامی مناطق را تصرف کرده باشد.
+    \end{itemize}
+    \subsection{ساختار کد}
+    توضیحات اولیه ساختار کد و پیاده سازی در جلسه حل تمرین مربوطه داده می‌شود.
+    
+    \section{ساختار پروژه}
+    جهت انجام پروژه، شما باید موارد زیر را انجام دهید:
+    \begin{itemize}
+        \item ابتدا باید باید نحوه مدل کردن کد پایتون را به طور کلی درک کنید.
+        \item سپس  آروینی ارائه دهید که از بیس بهتر باشد.
+        \item پس از آن مینی مکس را احتمالی کنید.
+        \item در گام آخر، آروین را برای حالت احتمالی تحلیل کنید.
+        \item به خلاقیت ها در حل مسئله و ارائه آروین ها نمره اضافه خوبی داده خواهد شد.
+        
+    \end{itemize}
+
+    \section{نکات پروژه }
+    به موارد زیر در انجام پروژه دقت کنید:
+    \begin{enumerate}
+    \item پروژه را در گروه‌های دو نفره انجام دهید.
+    \item نکات مربوط به اجرای پروژه و کد پروژه در کلاس حل تمرین بیان خواهد شد.
+    \item دقت کنید که در این پروژه فقط نسخه دو نفره بازی مد نظر است.
+    \item هدف از پروژه یادگیری شماست. لطفاً پروژه را خودتان انجام دهید.
+    
+    \end{enumerate}
+
+    
+\end{large}
+
+	 
+\end{document}

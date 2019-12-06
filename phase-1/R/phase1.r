@@ -10,10 +10,15 @@ library("caret")
 library("FactoMineR") # for PCA function
 library("clusterSim")
 
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 
 # data read
-data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
+data = read.csv('Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
 data
+
+test <- factor(data$Class, levels = c("L", "M", "H"), labels = as.numeric(c(1, 2, 3)))
+test <- as.numeric(test)
+test <- range01(test)
 
 # 1. Data Cleaning
 
