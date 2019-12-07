@@ -122,6 +122,7 @@ nominal_to_numeric(data$Class)
 # 3 M
 
 data_numeric <- data.matrix(data)
+data_numeric <- as.data.frame(data_numeric)
 data_numeric
 
 # 1. Data Cleaning
