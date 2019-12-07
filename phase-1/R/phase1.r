@@ -1,5 +1,5 @@
-#Title: Phase 1 Data Mining
-#Authors: Ali Goldani 9512762
+# Title: Phase 1 Data Mining
+# Authors: Ali Goldani 9512762107
 #         Mohammad Kahani 9512762447
 
 # Libraries
@@ -10,15 +10,119 @@ library("caret")
 library("FactoMineR") # for PCA function
 library("clusterSim")
 
-range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+# Functions
+range0_1 <- function(x){(x-min(x))/(max(x)-min(x))}
+
+nominal_to_numeric <- function (vector) {
+  unique <- unique(vector)
+  unique <- unique[order(unique)]
+  numeric <- data.frame(x=unique)
+  numeric
+}
 
 # data read
 data = read.csv('Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
 data
 
-test <- factor(data$Class, levels = c("L", "M", "H"), labels = as.numeric(c(1, 2, 3)))
-test <- as.numeric(test)
-test <- range01(test)
+nominal_to_numeric(data$gender)
+# 1 F
+# 2 M
+
+nominal_to_numeric(data$NationalITy)
+# 1        Egypt
+# 2         Iran
+# 3         Iraq
+# 4       Jordan
+# 5           KW
+# 6      lebanon
+# 7        Lybia
+# 8      Morocco
+# 9    Palestine
+# 10 SaudiArabia
+# 11       Syria
+# 12       Tunis
+# 13         USA
+# 14    venzuela
+
+nominal_to_numeric(data$StageID)
+# 1   HighSchool
+# 2   lowerlevel
+# 3 MiddleSchool
+
+nominal_to_numeric(data$PlaceofBirth)
+# 1        Egypt
+# 2         Iran
+# 3         Iraq
+# 4       Jordan
+# 5       KuwaIT
+# 6      lebanon
+# 7        Lybia
+# 8      Morocco
+# 9    Palestine
+# 10 SaudiArabia
+# 11       Syria
+# 12       Tunis
+# 13         USA
+# 14    venzuela
+
+nominal_to_numeric(data$GradeID)
+# 1  G-02
+# 2  G-04
+# 3  G-05
+# 4  G-06
+# 5  G-07
+# 6  G-08
+# 7  G-09
+# 8  G-10
+# 9  G-11
+# 10 G-12
+
+nominal_to_numeric(data$SectionID)
+# 1 A
+# 2 B
+# 3 C
+
+nominal_to_numeric(data$Topic)
+# 1     Arabic
+# 2    Biology
+# 3  Chemistry
+# 4    English
+# 5     French
+# 6    Geology
+# 7    History
+# 8         IT
+# 9       Math
+# 10     Quran
+# 11   Science
+# 12   Spanish
+
+nominal_to_numeric(data$Semester)
+# 1 F
+# 2 S
+
+nominal_to_numeric(data$Relation)
+# 1 Father
+# 2    Mum
+
+nominal_to_numeric(data$ParentAnsweringSurvey)
+# 1  No
+# 2 Yes
+
+nominal_to_numeric(data$ParentschoolSatisfaction)
+# 1  Bad
+# 2 Good
+
+nominal_to_numeric(data$StudentAbsenceDays)
+# 1 Above-7
+# 2 Under-7
+
+nominal_to_numeric(data$Class)
+# 1 H
+# 2 L
+# 3 M
+
+data_numeric <- data.matrix(data)
+data_numeric
 
 # 1. Data Cleaning
 
