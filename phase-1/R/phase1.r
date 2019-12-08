@@ -21,7 +21,7 @@ nominal_to_numeric <- function (vector) {
 }
 
 # data read
-data = read.csv('Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
+data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
 data
 
 nominal_to_numeric(data$gender)
@@ -123,6 +123,7 @@ nominal_to_numeric(data$Class)
 
 data_numeric <- data.matrix(data)
 data_numeric <- as.data.frame(data_numeric)
+write.csv(data_numeric,'phase-1/Data/SAP_numeric.csv')
 data_numeric
 
 # 1. Data Cleaning
@@ -186,7 +187,7 @@ summary(data_pca)
 pca.var <- data_pca$sdev^2
 #get the percentage of data variation for each pca
 pca.var.per <- round(pca.var/sum(pca.var)*100,1)
-#visualiztin the percentage of variation (can be used for answering questions)
+#visualizing the percentage of variation (can be used for answering questions)
 barplot(pca.var.per, main="Scree plot", xlab="PC", ylab="percentage of variation")
 #another visualization
 plot(data_pca$x[,1],data_pca$x[,2])
