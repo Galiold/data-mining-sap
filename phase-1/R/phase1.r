@@ -9,6 +9,8 @@ library("ltm")
 library("caret")
 library("FactoMineR") # for PCA function
 library("clusterSim")
+library("caTools")
+library("randomForest")
 
 # Functions
 range0_1 <- function(x){(x-min(x))/(max(x)-min(x))}
@@ -23,6 +25,12 @@ nominal_to_numeric <- function (vector) {
 # data read
 data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
 data
+
+
+# Information about attributes
+# Nominal Attributes: gender - nationality - place of birth - stageID - course topic - sectionID - semester - regarding parent attributes - absence days
+# Ordinal Attributes: stageID - gradeID - class
+# numeric Attributes: raisedhands - visitedResources - viewing announcement - discussions
 
 nominal_to_numeric(data$gender)
 # 1 F
@@ -123,7 +131,8 @@ nominal_to_numeric(data$Class)
 
 data_numeric <- data.matrix(data)
 data_numeric <- as.data.frame(data_numeric)
-write.csv(data_numeric,'phase-1/Data/SAP_numeric.csv')
+#adding new numeric csv file
+#write.csv(data_numeric,'phase-1/Data/SAP_numeric.csv')
 data_numeric
 
 # 1. Data Cleaning
@@ -188,7 +197,7 @@ pca.var <- data_pca$sdev^2
 #get the percentage of data variation for each pca
 pca.var.per <- round(pca.var/sum(pca.var)*100,1)
 #visualizing the percentage of variation (can be used for answering questions)
-barplot(pca.var.per, main="Scree plot", xlab="PC", ylab="percentage of variation")
+plobart(pca.var.per, main="Scree plot", xlab="PC", ylab="percentage of variation")
 #another visualization
 plot(data_pca$x[,1],data_pca$x[,2])
 
@@ -226,6 +235,23 @@ print(highlyCorrelated)
 #TODO data discretization
 #TODO data aggregation
 
-#data normalization for numeric att
-normal_data <- data.Normalization (selected,type="n4",normalization="column")
-normal_data
+#data normalization
+normal_data <- data.Normalization (data_numeric,type="n4",normalization="column")
+#write.csv(normal_data,'phase-1/Data/SAP_normal.csv')
+summary(normal_data)
+
+# machine learning & modeling
+
+#not used yet
+#can be used for creating train and test data
+ind <- sample(2, nrow(normal_data), replace=TRUE, prob=c(0.67, 0.33))
+sap_training <- normal_data[ind==1, 1:17]
+sap_test <- normal_data[ind==2, 1:17]
+summary(data_numeric)
+
+#find attribute importance with logistic regression modeling & random forest
+fit_glm <- glm(Class~.,normal_data,family = "binomial")
+fit_rf <- randomForest(Class~., data=normal_data)
+varImp(fit_glm, scale=FALSE)
+varImp(fit_rf, scale=FALSE) #Error
+
