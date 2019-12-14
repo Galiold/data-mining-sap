@@ -190,10 +190,65 @@ chisq_class_absence$p.value
 
 chisq.test(newData3, correct=F)
 
+#data transformation
+
+#data normalization
+normal_data <- data.Normalization (data_numeric,type="n4",normalization="column")
+#write.csv(normal_data,'phase-1/Data/SAP_normal.csv')
+summary(normal_data)
+
+
+
 #Data Reduction
+
+# machine learning & modeling for dimensionality reduction
+
+#not used yet
+#can be used for creating train and test data
+ind <- sample(2, nrow(normal_data), replace=TRUE, prob=c(0.67, 0.33))
+sap_training <- normal_data[ind==1, 1:17]
+sap_test <- normal_data[ind==2, 1:17]
+summary(data_numeric)
+
+#find attribute importance with logistic regression modeling & random forest #has errors
+#fit_glm <- glm(Class~.,normal_data,family = "binomial")
+#fit_rf <- randomForest(Class~., data=normal_data)
+#varImp(fit_glm, scale=FALSE)
+#varImp(fit_rf, scale=FALSE) #Error
+
+# stepwise regression
+
+# Fit the full model
+full.model <- lm(Class ~., data = normal_data)
+# Stepwise regression model
+step.model <- stepAIC(full.model, direction = "both",
+                      trace = FALSE)
+summary(step.model)
+
+models <- regsubsets(Class~., data = normal_data, nvmax = 6,
+                     method = "backward")
+summary(models)
+
+# Set seed for reproducibility
+set.seed(123)
+# Set up repeated k-fold cross-validation
+train.control <- trainControl(method = "cv", number = 5)
+# Train the model
+step.model <- train(Class ~., data = normal_data,
+                    method = "leapSeq",
+                    tuneGrid = data.frame(nvmax = 1:10),
+                    trControl = train.control
+                    )
+step.model$results
+step.model$bestTune
+coef(step.model$finalModel, 2)
+
+lm(Class ~ Relation + StudentAbsenceDays,
+   data = normal_data)
 
 #Feature Selection
 
+#numeric data selected but for better analysis we converted all features to numeric data and analyze the whole data
 selected <- data[,c('raisedhands','VisITedResources','AnnouncementsView', 'Discussion')]
 selected
 
@@ -237,6 +292,7 @@ res.pca$var
 summary(res.pca)
 
 
+#finding correlated attributes
 # ensure the results are repeatable
 set.seed(7)
 # load the data
@@ -251,75 +307,8 @@ highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
 # print indexes of highly correlated attributes
 print(highlyCorrelated)
 
-#TODO Data Reduction: dimensionality reduction
-#biserial.cor(data$raisedhands, data$NationalITy)
-#biserial.cor()
-
-#TODO feature selection need to be enhanced
-
-#TODO feature generation
-
-#data transformation
-
-#TODO data discretization
-#TODO data aggregation
-
-#data normalization
-normal_data <- data.Normalization (data_numeric,type="n4",normalization="column")
-#write.csv(normal_data,'phase-1/Data/SAP_normal.csv')
-summary(normal_data)
-
-# machine learning & modeling
-
-#not used yet
-#can be used for creating train and test data
-ind <- sample(2, nrow(normal_data), replace=TRUE, prob=c(0.67, 0.33))
-sap_training <- normal_data[ind==1, 1:17]
-sap_test <- normal_data[ind==2, 1:17]
-summary(data_numeric)
-
-#find attribute importance with logistic regression modeling & random forest
-#fit_glm <- glm(Class~.,normal_data,family = "binomial")
-#fit_rf <- randomForest(Class~., data=normal_data)
-#varImp(fit_glm, scale=FALSE)
-#varImp(fit_rf, scale=FALSE) #Error
-
-# stepwise regression
-
-# Fit the full model
-full.model <- lm(Class ~., data = normal_data)
-# Stepwise regression model
-step.model <- stepAIC(full.model, direction = "both",
-                      trace = FALSE)
-summary(step.model)
-
-models <- regsubsets(Class~., data = normal_data, nvmax = 6,
-                     method = "backward")
-summary(models)
-
-# Set seed for reproducibility
-set.seed(123)
-# Set up repeated k-fold cross-validation
-train.control <- trainControl(method = "cv", number = 5)
-# Train the model
-step.model <- train(Class ~., data = normal_data,
-                    method = "leapSeq",
-                    tuneGrid = data.frame(nvmax = 1:10),
-                    trControl = train.control
-                    )
-step.model$results
-step.model$bestTune
-coef(step.model$finalModel, 2)
-
-lm(Class ~ Relation + StudentAbsenceDays,
-   data = normal_data)
 
 
-loadings <- eigen(cov(normal_data))$vectors
-summary(loadings)
-explvar <- loadings^2
-
-summary(explvar)
 
 
 
