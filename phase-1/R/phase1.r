@@ -10,7 +10,9 @@ library("caret")
 library("FactoMineR") # for PCA function
 library("clusterSim")
 library("caTools")
-library("randomForest")
+library(randomForest)
+library(MASS)
+library(ggbiplot)
 
 # Functions
 range0_1 <- function(x){(x-min(x))/(max(x)-min(x))}
@@ -23,8 +25,10 @@ nominal_to_numeric <- function (vector) {
 }
 
 # data read
-data = read.csv('phase-1/Data/SAP.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
-data
+data = read.csv('Data/SAP_normal.csv', na.strings=c("", "N/A")) # To replace null values in the data with "NA" so we can find them
+head(data)
+
+plot(data$StudentAbsenceDays, data$Class, main="Scatterplot Example", xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19)
 
 
 # Information about attributes
@@ -133,7 +137,7 @@ data_numeric <- data.matrix(data)
 data_numeric <- as.data.frame(data_numeric)
 #adding new numeric csv file
 #write.csv(data_numeric,'phase-1/Data/SAP_numeric.csv')
-data_numeric
+head(data_numeric)
 
 # 1. Data Cleaning
 
@@ -170,7 +174,10 @@ data <- data[!duplicated(data),]
 # 2.2. Handling Correlation
 ggqqplot(data$AnnouncementsVie, ylab = "dis")
 
-res <- cor.test(data$raisedhands, data$raisedhands, method = "pearson")
+res <- cor.test(data$Class, data$Class, method = "pearson")
+res
+
+res <- cov(data$Class, data$StudentAbsenceDays)
 res
 
 newData <- table(data$Class, data$StudentAbsenceDays)
@@ -178,7 +185,9 @@ newData2 <- table(data$Class, data$gender)
 newData3 <- table(data$Class, data$GradeID)
 newData3
 
-chisq.test(newData, correct=F)
+chisq_class_absence <- chisq.test(newData)
+chisq_class_absence$p.value
+
 chisq.test(newData3, correct=F)
 
 #Data Reduction
@@ -189,21 +198,27 @@ selected <- data[,c('raisedhands','VisITedResources','AnnouncementsView', 'Discu
 selected
 
 #pca variance order for numeric attributes
-data_pca <- prcomp(selected, scale.=T)
+data_pca <- prcomp(data, center = T,scale.=T)
 data_pca
 summary(data_pca)
+strin <- str(data_pca)
+
+data.score <- c(rep("Bad", 3), rep("Meh",4), rep("Good", 7),rep("Meh",3), "Good", rep("Bad", 3), rep("Meh",4), rep("Good", 3), "Meh", rep("Good", 3))
+data.score <- c("Good", "Meh", "Bad")
+ggbiplot(data_pca, ellipse = T, labels = data$StudentAbsenceDays, groups = data$Class)
 #amount of variation for each pc
 pca.var <- data_pca$sdev^2
 #get the percentage of data variation for each pca
 pca.var.per <- round(pca.var/sum(pca.var)*100,1)
 #visualizing the percentage of variation (can be used for answering questions)
-plobart(pca.var.per, main="Scree plot", xlab="PC", ylab="percentage of variation")
+barplot(pca.var.per, main="Scree plot", xlab="PCA", ylab="percentage of variation")
 #another visualization
 plot(data_pca$x[,1],data_pca$x[,2])
 
 
 #another pca function for more detailed output
-res.pca <- PCA(selected, graph = FALSE)
+res.pca <- PCA(data, graph = T)
+res.pca$var
 #information needed for variation percentage can be better found here
 summary(res.pca)
 
