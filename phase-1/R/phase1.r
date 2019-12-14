@@ -198,7 +198,7 @@ selected <- data[,c('raisedhands','VisITedResources','AnnouncementsView', 'Discu
 selected
 
 #pca variance order for numeric attributes
-data_pca <- prcomp(data, center = T,scale.=T)
+data_pca <- prcomp(normal_data, center = T,scale.=T)
 data_pca
 summary(data_pca)
 strin <- str(data_pca)
@@ -214,6 +214,20 @@ pca.var.per <- round(pca.var/sum(pca.var)*100,1)
 barplot(pca.var.per, main="Scree plot", xlab="PCA", ylab="percentage of variation")
 #another visualization
 plot(data_pca$x[,1],data_pca$x[,2])
+
+#Better visualization of pca variances
+
+screeplot(data_pca, type = "l", npcs = 15, main = "Screeplot of 17 PCs")
+abline(h = 1, col="red", lty=5)
+legend("topright", legend=c("Eigenvalue = 1"),
+       col=c("red"), lty=5, cex=0.6)
+
+cumpro <- cumsum(data_pca$sdev^2 / sum(data_pca$sdev^2))
+plot(cumpro[0:15], xlab = "PC #", ylab = "Amount of explained variance", main = "Cumulative variance plot")
+abline(v = 6, col="orange", lty=5)
+abline(h = 0.6, col="purple", lty=5)
+legend("topleft", legend=c("Cut-off @ PC6"),
+       col=c("blue"), lty=5, cex=0.6)
 
 
 #another pca function for more detailed output
@@ -270,8 +284,6 @@ summary(data_numeric)
 #varImp(fit_glm, scale=FALSE)
 #varImp(fit_rf, scale=FALSE) #Error
 
-
-
 # stepwise regression
 
 # Fit the full model
@@ -301,3 +313,13 @@ coef(step.model$finalModel, 2)
 
 lm(Class ~ Relation + StudentAbsenceDays,
    data = normal_data)
+
+
+loadings <- eigen(cov(normal_data))$vectors
+summary(loadings)
+explvar <- loadings^2
+
+summary(explvar)
+
+
+
