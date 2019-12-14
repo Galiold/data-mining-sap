@@ -265,8 +265,39 @@ sap_test <- normal_data[ind==2, 1:17]
 summary(data_numeric)
 
 #find attribute importance with logistic regression modeling & random forest
-fit_glm <- glm(Class~.,normal_data,family = "binomial")
-fit_rf <- randomForest(Class~., data=normal_data)
-varImp(fit_glm, scale=FALSE)
-varImp(fit_rf, scale=FALSE) #Error
+#fit_glm <- glm(Class~.,normal_data,family = "binomial")
+#fit_rf <- randomForest(Class~., data=normal_data)
+#varImp(fit_glm, scale=FALSE)
+#varImp(fit_rf, scale=FALSE) #Error
 
+
+
+# stepwise regression
+
+# Fit the full model
+full.model <- lm(Class ~., data = normal_data)
+# Stepwise regression model
+step.model <- stepAIC(full.model, direction = "both",
+                      trace = FALSE)
+summary(step.model)
+
+models <- regsubsets(Class~., data = normal_data, nvmax = 6,
+                     method = "backward")
+summary(models)
+
+# Set seed for reproducibility
+set.seed(123)
+# Set up repeated k-fold cross-validation
+train.control <- trainControl(method = "cv", number = 5)
+# Train the model
+step.model <- train(Class ~., data = normal_data,
+                    method = "leapSeq",
+                    tuneGrid = data.frame(nvmax = 1:10),
+                    trControl = train.control
+                    )
+step.model$results
+step.model$bestTune
+coef(step.model$finalModel, 2)
+
+lm(Class ~ Relation + StudentAbsenceDays,
+   data = normal_data)
